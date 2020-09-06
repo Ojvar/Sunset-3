@@ -100,8 +100,13 @@ ExpressModule.addMiddleware = function addMiddleware(app, config) {
     app.use(Helmet());
 
     /* CSRF */
-    global.csrf = CSURF({
+    const csrf = CSURF({
         cookie: true,
+    });
+    app.use(csrf);
+    app.use((req, res, next) => {
+        res.locals.csrftoken = req.csrfToken();
+        next();
     });
 };
 
