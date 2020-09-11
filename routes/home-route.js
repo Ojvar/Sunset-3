@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
 /* Get Home router */
 const router = Router.router();
 
-router.get('/:name?', 'home@index', 'home.index');
+router.get("/:name?", "home@index", "home.index");

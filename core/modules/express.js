@@ -10,6 +10,8 @@ const Helmet = require("helmet");
 const Morgan = require("morgan");
 const RateLimit = require("express-rate-limit");
 const RedisStore = require("rate-limit-redis");
+const Multer = require("multer");
+const { uuidV4: v4 } = require("uuid");
 
 /**
  * Module
@@ -20,13 +22,10 @@ module.exports = ExpressModule;
 /**
  * Boot function
  */
-ExpressModule.boot = function boot(Bootstrap) {
-    return new Promise((resolve, reject) => {
-        const Config = config("core/server", "express");
-        global.App = ExpressModule.setupExpress(Config);
+ExpressModule.boot = async function boot(Bootstrap) {
+    const Config = config("core/server", "express");
 
-        resolve();
-    });
+    global.App = ExpressModule.setupExpress(Config);
 };
 
 /**
@@ -59,13 +58,13 @@ ExpressModule.setupExpress = function setupExpress(config) {
  * @param {Object} app App instance
  * @param {Object} config Config data
  */
-ExpressModule.addMiddleware = function addMiddleware(app, config) {
+ExpressModule.addMiddleware = function addMiddleware(app, expressConfig) {
     /* Compression */
-    ExpressModule.setupCompression(app, config);
+    ExpressModule.setupCompression(app, expressConfig);
 
     /* Add morgan */
     if (isProductionMode()) {
-        app.set("trust proxy", config.trustedProxy.split(/[\,\;]/g));
+        app.set("trust proxy", expressConfig.trustedProxy.split(/[\,\;]/g));
         app.use(Morgan("combined"));
     } else {
         app.use(Morgan("dev"));
@@ -74,14 +73,14 @@ ExpressModule.addMiddleware = function addMiddleware(app, config) {
     /* Setup throttle */
     let store = null;
 
-    if (config.throttleStore == "redis") {
+    if (expressConfig.throttleStore == "redis") {
         store = new RedisStore({});
     }
     global.limiter = new RateLimit({
         store,
-        windowMs: +config.throttleWindow,
-        max: +config.throttleMax,
-        delayMs: +config.throttleDelay,
+        windowMs: +expressConfig.throttleWindow,
+        max: +expressConfig.throttleMax,
+        delayMs: +expressConfig.throttleDelay,
     });
     // app.use(limiter);
 
@@ -108,6 +107,19 @@ ExpressModule.addMiddleware = function addMiddleware(app, config) {
         res.locals.csrftoken = req.csrfToken();
         next();
     });
+
+    /* Setup multer */
+    const multerConfig = config("core/multer");
+    const storage = Multer.diskStorage({
+        destination: function(req, file, cb) {
+            cb(null, multerConfig.storage);
+        },
+        filename: function(req, file, cb) {
+            cb(null, uuidV4());
+        },
+    });
+
+    global.upload = Multer({ storage: storage });
 };
 
 /**
