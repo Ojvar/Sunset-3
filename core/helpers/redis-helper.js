@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const _ = require('lodash');
-const Redis = require('redis');
+const _ = require("lodash");
+const Redis = require("redis");
 
 /**
  * Redis helper class
@@ -18,10 +18,10 @@ module.exports = RedisHelper;
 RedisHelper.create = function create(options) {
     return new Promise((resolve, reject) => {
         const client = new RedisHelper();
-        let redisSettings = config('core/server', 'redis');
+        let redisSettings = config("core/server", "redis");
 
         redisSettings = _.merge(redisSettings, options);
-        client.init(options);
+        client.init(redisSettings);
 
         resolve(client);
     });
@@ -34,7 +34,7 @@ RedisHelper.create = function create(options) {
 RedisHelper.prototype.init = function init(options) {
     return new Promise((resolve, reject) => {
         this.client = Redis.createClient(options);
-        this.client.on("error", function (error) {
+        this.client.on("error", function(error) {
             console.error(error);
         });
         resolve(this.client);
@@ -52,11 +52,11 @@ RedisHelper.prototype.doAction = function doAction() {
 
         /* Validation */
         if (null == this.client) {
-            reject(new Error('Redis client is null'));
+            reject(new Error("Redis client is null"));
             return;
         }
         if (!this.client[cmd]) {
-            reject(new Error('Redis method is undefined'));
+            reject(new Error("Redis method is undefined"));
             return;
         }
 

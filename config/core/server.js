@@ -42,11 +42,11 @@ module.exports = {
     },
 
     redis: {
-        host: process.env.HOST || "localhost",
-        port: process.env.PORT,
-        password: process.env.PASSWORD,
-        db: isNULL(process.env.DB, 0),
-        url: process.env.URL,
+        host: process.env.REDIS_HOST || "localhost",
+        port: process.env.REDIS_PORT || 6379,
+        password: process.env.REDIS_PASSWORD,
+        db: isNULL(process.env.REDIS_DB, 0),
+        url: process.env.REDIS_URL,
     },
 
     session: {
