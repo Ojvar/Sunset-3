@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const Mongoose = require('mongoose');
-const FS = require('fs');
-const Path = require('path');
+const Mongoose = require("mongoose");
+const FS = require("fs");
+const Path = require("path");
 
 /**
  * Driver module
@@ -28,12 +28,14 @@ Driver.init = function init() {
  * @param {Object} config Config object
  */
 Driver.getConnectionString = function getConnectionString(config) {
-    const host = config.host || 'localhost';
-    const port = config.port ?
-        ':' + config.port :
-        config.port;
+    const host = config.host || "localhost";
+    const port = config.port ? ":" + config.port : config.port;
 
-    return `mongodb://${host}${port}/${config.db}`;
+    const user = config.user;
+    const pwd = config.pwd ? ":" + config.pwd : config.pwd;
+    const userPassStr = user ? `${user}${pwd}@` : "";
+
+    return `mongodb://${userPassStr}${host}${port}/${config.db}`;
 };
 
 /**
@@ -41,7 +43,7 @@ Driver.getConnectionString = function getConnectionString(config) {
  */
 Driver.prototype.connect = function connect() {
     return new Promise((resolve, reject) => {
-        const databaseConfig = config('core/db', 'mongodb');
+        const databaseConfig = config("core/db", "mongodb");
 
         try {
             const connString = Driver.getConnectionString(databaseConfig);
@@ -49,8 +51,8 @@ Driver.prototype.connect = function connect() {
 
             /* Try to init models */
             this.initModels(this.engine)
-                .then(res => resolve(this))
-                .catch(err => reject(err));
+                .then((res) => resolve(this))
+                .catch((err) => reject(err));
         } catch (err) {
             reject(err);
         }
@@ -62,20 +64,22 @@ Driver.prototype.connect = function connect() {
  */
 Driver.prototype.initModels = function initModels(engine) {
     return new Promise((resolve, reject) => {
-        const basePath = rPath('back-end/models');
-        const models = FS.readdirSync(basePath)
-            .filter(file => Path.extname(file).toLowerCase() == '.js');
+        const basePath = rPath("back-end/models");
+        const models = FS.readdirSync(basePath).filter(
+            (file) => Path.extname(file).toLowerCase() == ".js"
+        );
 
-        models.forEach(file => {
+        models.forEach((file) => {
             const Model = use(basePath, file);
-            Model.init()
-                .then(model => {
-                    Logger.info(`> DB-Model ${model.name} initialized successfully`);
-                });
+            Model.init().then((model) => {
+                Logger.info(
+                    `> DB-Model ${model.name} initialized successfully`
+                );
+            });
         });
 
         resolve();
-    })
+    });
 };
 
 /**
