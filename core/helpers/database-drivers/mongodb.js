@@ -32,7 +32,7 @@ Driver.getConnectionString = function getConnectionString(config) {
     const port = config.port ? ":" + config.port : config.port;
 
     const user = config.user;
-    const pwd = config.pwd ? ":" + config.pwd : config.pwd;
+    const pwd = config.pwd ? ":" + encodeURIComponent(config.pwd) : config.pwd;
     const userPassStr = user ? `${user}${pwd}@` : "";
 
     return `mongodb://${userPassStr}${host}${port}/${config.db}`;
