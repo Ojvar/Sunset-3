@@ -5,9 +5,9 @@ module.exports = {
         db: process.env.DB_NAME || "sunset_db",
         host: process.env.DB_HOST || "localhost",
         port: process.env.DB_PORT || 27017,
-        user: process.env.DB_USER,
-        pwd: process.env.DB_PWD,
         options: {
+            user: process.env.DB_USER,
+            pass: process.env.DB_PASS,
             useFindAndModify: false,
             useCreateIndex: true,
             uri_decode_auth: true,
