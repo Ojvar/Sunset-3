@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Get headers
@@ -8,20 +8,19 @@ function getHeaders() {
     const customHeaders = {};
 
     Object.keys(process.env)
-        .filter(key => key.startsWith(C_HEADER))
-        .forEach(key => {
-            const headerName = key.replace(C_HEADER, '')
-                .replace(/_/g, '-');
+        .filter((key) => key.startsWith(C_HEADER))
+        .forEach((key) => {
+            const headerName = key.replace(C_HEADER, "").replace(/_/g, "-");
 
             customHeaders[headerName] = process.env[key];
         });
 
     return customHeaders;
-};
+}
 
 /**
  * Export configs
  */
 module.exports = {
-    headers: getHeaders()
+    headers: getHeaders(),
 };

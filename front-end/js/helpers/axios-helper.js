@@ -1,7 +1,7 @@
 "use strict";
 
 import _ from "lodash";
-import FormData from "form-data";
+import JsonFormData from "json-form-data";
 
 /**
  * Axios Helper class
@@ -33,35 +33,11 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
 
     /* Check form-data flag */
     if (true == options.sendAsFormData) {
-        /* Setup form-data */
-        const formData = new FormData();
-
-        /* Set new data */
-        Object.keys(data).forEach((key) => {
-            let itemData = data[key];
-
-            if (itemData == null) {
-                return;
-            }
-
-            /* Add array of files */
-            if (options.filesArray.indexOf(key) > -1) {
-                for (let i = 0; i < itemData.length; ++i) {
-                    const file = itemData[i];
-
-                    formData.append(key, file);
-                }
-            } else {
-                /* Add object */
-                if (Array.isArray(itemData)) {
-                    itemData = JSON.stringify(itemData);
-                }
-
-                formData.append(key, itemData);
-            }
+        postData = JsonFormData(data, {
+            initialFormData: new FormData(),
+            showLeafArrayIndexes: true,
+            includeNullValues: false,
         });
-
-        postData = formData;
 
         /* Setup header */
         options.headers["content-type"] = "multipart/form-data";
@@ -93,7 +69,7 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
             }
         ).content;
 
-    axios.defaults.headers.common["X-CSRF-TOKEN"] = options.headers[
+    Axios.defaults.headers.common["X-CSRF-TOKEN"] = options.headers[
         "x-xsrf-token"
     ] = options.headers["x-csrf-token"] = options.headers[
         "xsrf-token"
@@ -105,7 +81,7 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
     }
 
     /* Create axios instance */
-    let instance = axios.create(config);
+    let instance = Axios.create(config);
 
     return instance[method](url, postData);
 };

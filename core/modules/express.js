@@ -11,7 +11,9 @@ const Morgan = require("morgan");
 const RateLimit = require("express-rate-limit");
 const RedisStore = require("rate-limit-redis");
 const Multer = require("multer");
-const { uuidV4: v4 } = require("uuid");
+const MkDirP = require("mkdirp");
+const uuidV4 = require("uuid").v4;
+const MimeTypes = require("mime-types");
 
 /**
  * Module
@@ -58,7 +60,7 @@ ExpressModule.setupExpress = function setupExpress(config) {
  * @param {Object} app App instance
  * @param {Object} config Config data
  */
-ExpressModule.addMiddleware = function addMiddleware(app, expressConfig) {
+ExpressModule.addMiddleware = async function addMiddleware(app, expressConfig) {
     /* Compression */
     ExpressModule.setupCompression(app, expressConfig);
 
@@ -110,16 +112,33 @@ ExpressModule.addMiddleware = function addMiddleware(app, expressConfig) {
 
     /* Setup multer */
     const multerConfig = config("core/multer");
+
+    /* Create Diretory */
+    if (!FS.existsSync(multerConfig.storage)) {
+        await MkDirP(multerConfig.storage);
+    }
+
     const storage = Multer.diskStorage({
         destination: function(req, file, cb) {
             cb(null, multerConfig.storage);
         },
         filename: function(req, file, cb) {
-            cb(null, uuidV4());
+            let ext = MimeTypes.extension(file.mimetype);
+            if (ext) {
+                ext = `.${ext}`;
+            } else {
+                ext = "";
+            }
+
+            let filename = `${uuidV4()}${ext}`;
+            cb(null, filename);
         },
     });
 
-    global.upload = Multer({ storage: storage });
+    global.upload = Multer({
+        limits: { fieldSize: multerConfig.maxSize },
+        storage,
+    });
 };
 
 /**

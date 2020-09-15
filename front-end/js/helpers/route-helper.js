@@ -20,19 +20,14 @@ RouteHelper.routePath = function routePath(alias, params) {
     let path = (RouteHelper.routeManfiest[alias] || {}).route || "";
 
     /* Replace params */
-    const pathParams = path.match(/(\/:\w+\??)/g) || [];
+    const pathParams = path.match(/(\b\/:\w+\??\b)/g) || [];
     if (params != null) {
         pathParams.forEach((param) => {
-            const key = param
-                .replace(":", "")
-                .replace("/", "")
-                .replace("?", "");
-
+            const key = param.replace(/[\:|\/|\?]/g, "");
             const value = params[key] || "";
-            const regStr = "\\:?" + param + "\\??";
-            const regexp = new RegExp(regStr, "g");
 
-            path = path.replace(regexp, "/" + value);
+            param = `/:${key}\\??`;
+            path = path.replace(new RegExp(param), "/" + value);
         });
     }
 

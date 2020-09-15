@@ -65,17 +65,24 @@ Router.loadRoutes = function loadRoutes() {
 Router.addEventHandler = function addEventHandler() {
     /* Add Error handler */
     global.App.use((err, req, res, next) => {
+        console.error(err);
+        let message = "Internal server error";
+
+        if ("development" === process.env.NODE_ENV) {
+            message += "\n" + JSON.stringify(err);
+        }
+
         if (Router.isAjax(req)) {
             res.status(500)
-                .send("Internal server error")
+                .send(message)
                 .end();
         } else if (req.accepts("html")) {
             res.render("errors/500.pug", {
                 url: req.url,
-                err,
+                err: message,
             });
         } else {
-            res.type("txt").send("Internal server error");
+            res.type("txt").send(message);
         }
     });
 
@@ -150,15 +157,17 @@ Router.routePath = function routePath(alias, params) {
         (groupName != null ? "/" : "") + ("" + groupName) + router.route.path;
     path = path.replace(/\/\//g, "/");
 
+    console.log(path)
+
     /* Replace params */
     if (null != params) {
         const pathParams = path.match(/(:\w+\??)/g) || [];
-        params = params || {};
+
         pathParams.forEach((param) => {
-            const key = param.replace(":", "").replace("?", "");
+            const key = param.replace(/[\:|\?]/g, "");
             const value = params[key] || "";
 
-            path = path.replace(new RegExp(param, "g"), value);
+            path = path.replace(new RegExp(param + "\\?", "g"), value);
         });
     }
 

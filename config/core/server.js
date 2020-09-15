@@ -22,6 +22,7 @@ module.exports = {
     serverUrl: isNULL(process.env.SERVER_URL, `${C_HOST}:${C_PORT}`),
 
     express: {
+        trusted_ips: process.env.SERVER_TRUSTED_IPS || "127.0.0.1,localhost",
         publicFolder: process.env.EXPRESS_PUBLIC || "public",
         viewsFolder: process.env.EXPRESS_VIEWS_PATH || "front-end/views",
         compression: process.env.SERVER_COMPRESSION || "gzip",

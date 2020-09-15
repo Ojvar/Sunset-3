@@ -4,8 +4,7 @@ block vars
 doctype html
 html
     head
-        meta(name='csrf-token' content=csrftoken)
-        meta(csrf-token=csrftoken)
+        meta(name='csrf-token', content=csrftoken)
         meta(name='viewport' content='width=device-width, initial-scale=1')
         title #{title}
 
@@ -21,29 +20,17 @@ body
                 .container
                     .navbar-brand
                         a.navbar-item
-                            img(src='images/logo.png' alt='Logo')
+                            img(src='images/logo.png' alt='SunSet Logo')
                         span.navbar-burger.burger(data-target='navbarMenuHero1')
                             span
                             span
                             span
                     #navbarMenuHero1.navbar-menu
                         .navbar-end
-                            a.navbar-item.is-active(href=Router.routePath('home.index'))
+                            a.navbar-item.is-active(href=Router.routePath('home.index', { name: "John Doe" }))
                                 | Home
                             a.navbar-item(href="#")
                                 | About
-                            //- .navbar-item.has-dropdown.is-hoverable
-                                .navbar-link
-                                    | More
-                                #moreDropdown.navbar-dropdown
-                                    a.navbar-item(href='#')
-                                        .level.is-mobile
-                                            .level-left
-                                                .level-item
-                                                    p
-                                                        strong Extensions
-                                                        br
-                                                        small Side projects to enhance Bulma
 
         .hero.is-fullheight-with-navbar
             .hero-body
@@ -53,7 +40,7 @@ body
                 nav.tabs
                     .container
                         ul
-                            li.is-active
+                            //- li.is-active
                                 a Home
                             li
                                 a About
