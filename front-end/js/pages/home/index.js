@@ -1,17 +1,15 @@
 "use strict";
 
-import RouteHelper from "@HELPERS/route-helper"
-
-window.RouteHelper = RouteHelper;
+function HomePage() {}
 
 /**
- * Page module
+ * Init method
  */
-function Page() {}
+HomePage.init = function init() {
+    new Vue({
+        el: "#app",
+    });
+};
 
-/**
- * Initialize
- */
-Page.init = function init() {};
-
-Page.init();
+/* Init */
+HomePage.init();

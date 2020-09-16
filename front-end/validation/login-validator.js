@@ -1,12 +1,12 @@
 "use strict";
 
-const ValidatorHelper = require("@HELPERS/validator-helper");
+import ValidatorHelper from "@HELPERS/validator-helper";
 
 /**
  * Validator
  */
 function Validator() {}
-module.exports = Validator;
+export default Validator;
 
 /**
  * Validate function

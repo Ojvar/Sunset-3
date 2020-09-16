@@ -6,7 +6,7 @@ const ValidatorJS = require("validatorjs");
  * Validator
  */
 function Validator() {}
-module.exports = Validator;
+export default Validator;
 
 /**
  * Validate
