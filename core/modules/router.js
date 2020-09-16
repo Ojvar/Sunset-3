@@ -157,7 +157,7 @@ Router.routePath = function routePath(alias, params) {
         (groupName != null ? "/" : "") + ("" + groupName) + router.route.path;
     path = path.replace(/\/\//g, "/");
 
-    console.log(path)
+    console.log(path);
 
     /* Replace params */
     if (null != params) {
@@ -167,7 +167,7 @@ Router.routePath = function routePath(alias, params) {
             const key = param.replace(/[\:|\?]/g, "");
             const value = params[key] || "";
 
-            path = path.replace(new RegExp(param + "\\?", "g"), value);
+            path = path.replace(new RegExp(param + "?", "g"), value);
         });
     }
 
