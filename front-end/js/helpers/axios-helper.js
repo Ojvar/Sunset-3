@@ -89,7 +89,7 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
 /* Add standard restful request types */
 const types = ["get", "head", "post", "patch", "put", "options", "link"];
 types.forEach((type) => {
-    AxiosHelper[type] = function send(method, url, data, options) {
-        return AxiosHelper.send(type, method, url, data, options);
+    AxiosHelper[type] = function send(url, data, options) {
+        return AxiosHelper.send(type, url, data, options);
     };
 });

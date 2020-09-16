@@ -6,6 +6,7 @@ const Express = require("express");
 const bodyParser = require("body-parser");
 const CookieParser = require("cookie-parser");
 const CSURF = require("csurf");
+const CORS = require("cors");
 const Helmet = require("helmet");
 const Morgan = require("morgan");
 const RateLimit = require("express-rate-limit");
@@ -71,6 +72,14 @@ ExpressModule.addMiddleware = async function addMiddleware(app, expressConfig) {
     } else {
         app.use(Morgan("dev"));
     }
+
+    /* CORS */
+    const corsOptions = {
+        origin: true,
+        optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+    };
+    // app.options("*", CORS(corsOptions));
+    app.use(CORS());
 
     /* Setup throttle */
     let store = null;
