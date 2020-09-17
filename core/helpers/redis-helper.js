@@ -15,16 +15,14 @@ module.exports = RedisHelper;
  * Create a new redis client instance
  * @param {Object} options Redis initializtion data
  */
-RedisHelper.create = function create(options) {
-    return new Promise((resolve, reject) => {
-        const client = new RedisHelper();
-        let redisSettings = config("core/server", "redis");
+RedisHelper.create = async function create(options) {
+    const client = new RedisHelper();
+    let redisSettings = config("core/server", "redis");
 
-        redisSettings = _.merge(redisSettings, options);
-        client.init(redisSettings);
+    redisSettings = _.merge(redisSettings, options);
+    await client.init(redisSettings);
 
-        resolve(client);
-    });
+    return client;
 };
 
 /**
@@ -34,10 +32,18 @@ RedisHelper.create = function create(options) {
 RedisHelper.prototype.init = function init(options) {
     return new Promise((resolve, reject) => {
         this.client = Redis.createClient(options);
+
         this.client.on("error", function(error) {
             console.error(error);
         });
-        resolve(this.client);
+
+        if (options.password) {
+            this.client.auth(options.password, (err, res) => {
+                resolve(this.client);
+            });
+        } else {
+            resolve(this.client);
+        }
     });
 };
 
