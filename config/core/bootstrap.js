@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Export config
@@ -12,6 +12,6 @@ module.exports = {
         104: "router",
         105: "database",
         110: "services",
-        199: "server"
-    }
+        199: "server",
+    },
 };

@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const Mongoose = require('mongoose');
+const Mongoose = require("mongoose");
 
 /**
  * Model class
@@ -12,16 +12,16 @@ module.exports = Model;
  * Initialize model
  */
 Model.init = function init() {
-    const modelName = 'Role';
+    const modelName = "Role";
 
     return new Promise((resolve, reject) => {
         const model = Mongoose.model(modelName, Model.getSchema());
 
         resolve({
             name: modelName,
-            model
+            model,
         });
-    })
+    });
 };
 
 /**
@@ -34,16 +34,18 @@ Model.getSchema = function getSchema() {
             required: true,
             unique: true,
             index: true,
-            trim: true
+            trim: true,
         },
         is_active: {
             type: Boolean,
             required: true,
-            default: true
+            default: true,
         },
-        rules: [{
-            type: Mongoose.Schema.Types.ObjectId,
-            ref: 'Rule'
-        }]
+        rules: [
+            {
+                type: Mongoose.Schema.Types.ObjectId,
+                ref: "Rule",
+            },
+        ],
     });
 };

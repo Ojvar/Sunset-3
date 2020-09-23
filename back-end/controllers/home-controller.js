@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 /**
  * Controller
  */
-function Controller() { }
+function Controller() {}
 module.exports = Controller;
 
 /**
@@ -13,6 +13,5 @@ module.exports = Controller;
  * @param {Function} next Callback
  */
 Controller.index = function index(req, res, next) {
-    res.render('home.pug', { req });
+    res.render("home.pug", { req });
 };
-

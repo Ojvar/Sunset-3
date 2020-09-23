@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 /**
  * Controller
  */
-function Controller() { }
+function Controller() {}
 module.exports = Controller;
 
 /**
@@ -13,7 +13,7 @@ module.exports = Controller;
  * @param {Function} next Callback
  */
 Controller.login = function login(req, res, next) {
-    res.render('auth/login.pug', { req });
+    res.render("auth/login.pug", { req });
 };
 
 /**
@@ -25,7 +25,7 @@ Controller.login = function login(req, res, next) {
 Controller.logout = function logout(req, res, next) {
     req.session.auth = null;
 
-    res.redirect(Router.routePath('home.index'));
+    res.redirect(Router.routePath("home.index"));
 };
 
 /**
@@ -36,14 +36,13 @@ Controller.logout = function logout(req, res, next) {
  */
 Controller.attempt = function attempt(req, res, next) {
     req.session.auth = {
-        id: '5f1fd070e0efdd7db92f4251',
-        name: 'root',
-        login_at: new Date()
+        id: "5f1fd070e0efdd7db92f4251",
+        name: "root",
+        login_at: new Date(),
     };
 
-    res.status(201)
-        .send({
-            success: true,
-            data: req.session.auth
-        });
+    res.status(201).send({
+        success: true,
+        data: req.session.auth,
+    });
 };

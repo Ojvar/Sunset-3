@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 /**
  * Base filter
  */
-function BaseFilter() { }
+function BaseFilter() {}
 module.exports = BaseFilter;
 
 /**
@@ -22,9 +22,7 @@ BaseFilter.filter = async function filter(data, filterFnc) {
 
     if (!isArray) {
         return data[0];
-    }
-    else {
+    } else {
         return data;
     }
 };
-

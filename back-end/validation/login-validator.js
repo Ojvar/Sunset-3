@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const ValidatorHelper = use('core/helpers/validator-helper');
+const ValidatorHelper = use("core/helpers/validator-helper");
 
 /**
  * Validator
  */
-function Validator() { }
+function Validator() {}
 module.exports = Validator;
 
 /**
@@ -19,16 +19,16 @@ Validator.validate = function validate() {
  * Validation funciton
  */
 Validator.lang = function lang() {
-    return 'en';
+    return "en";
 };
 
 /**
  * Data function
  */
 Validator.data = function data(req) {
-     return {
+    return {
         name: req.body.name,
-        password: req.body.password
+        password: req.body.password,
     };
 };
 
@@ -37,8 +37,8 @@ Validator.data = function data(req) {
  */
 Validator.rules = function rules() {
     return {
-        'name': 'required|min:4|max:25',
-        'password': 'required|min:6|max:50'
+        name: "required|min:4|max:25",
+        password: "required|min:6|max:50",
     };
 };
 
@@ -47,8 +47,8 @@ Validator.rules = function rules() {
  */
 Validator.messages = function messages() {
     return {
-         'min.password': 'مقدار :attribute باید حداقل :min کاراکتر باشد.',
-         'max.password': 'مقدار :attribute باید حداکثر :max کاراکتر باشد.'
+        "min.password": "مقدار :attribute باید حداقل :min کاراکتر باشد.",
+        "max.password": "مقدار :attribute باید حداکثر :max کاراکتر باشد.",
     };
 };
 
@@ -57,7 +57,7 @@ Validator.messages = function messages() {
  */
 Validator.attributes = function attributes() {
     return {
-        name: 'نام کاربری',
-        password: 'گذرواژه'
+        name: "نام کاربری",
+        password: "گذرواژه",
     };
 };

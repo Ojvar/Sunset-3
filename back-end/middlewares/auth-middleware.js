@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Apply security
@@ -10,7 +10,7 @@ module.exports = function apply(req, res, next) {
     const auth = req.session.auth;
 
     if (null == auth) {
-        res.redirect(Router.routePath('auth.login'));
+        res.redirect(Router.routePath("auth.login"));
     } else {
         next();
     }

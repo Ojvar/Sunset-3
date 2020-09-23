@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const Config = config('core/security');
+const Config = config("core/security");
 
 /**
  * Apply security
@@ -11,10 +11,9 @@ const Config = config('core/security');
 module.exports = function apply(req, res, next) {
     const headers = Config.headers;
 
-    Object.keys(headers)
-        .forEach(key => {
-            res.set(key, headers[key]);
-        });
+    Object.keys(headers).forEach((key) => {
+        res.set(key, headers[key]);
+    });
 
     next();
 };

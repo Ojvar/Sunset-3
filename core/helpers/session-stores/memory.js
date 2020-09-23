@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const MemoryStore = require('memorystore');
+const MemoryStore = require("memorystore");
 
 /**
  * Session store class
  */
-function SessionStore() { }
+function SessionStore() {}
 module.exports = SessionStore;
 
 /**
@@ -18,7 +18,7 @@ SessionStore.make = function make(session, config) {
         /* Try to create redis-store */
         const memoryStore = MemoryStore(session);
         const result = new memoryStore({
-            checkPeriod: config.maxAge
+            checkPeriod: config.maxAge,
         });
 
         resolve(result);

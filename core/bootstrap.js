@@ -1,18 +1,18 @@
-'use strict';
+"use strict";
 
-const Path = require('path');
+const Path = require("path");
 
 /**
  * Boot strap function
  */
-function Bootstrap() { }
+function Bootstrap() {}
 module.exports = Bootstrap;
 
 /**
  * Boot function
  */
 Bootstrap.boot = function boot() {
-    const config = require(Path.resolve('config/core/bootstrap'));
+    const config = require(Path.resolve("config/core/bootstrap"));
 
     global.Logger = console;
     return Bootstrap.loadModules(config);
@@ -24,10 +24,10 @@ Bootstrap.boot = function boot() {
  */
 Bootstrap.loadModules = function loadModules(config) {
     return new Promise(async (resolve, reject) => {
-        const path = Path.resolve(__dirname, 'modules');
+        const path = Path.resolve(__dirname, "modules");
         const modules = Object.keys(config.modules)
             .sort()
-            .map(x => config.modules[x]);
+            .map((x) => config.modules[x]);
 
         for (let moduleIndex in modules) {
             const module = modules[moduleIndex];
@@ -37,7 +37,7 @@ Bootstrap.loadModules = function loadModules(config) {
             const ModuleFile = require(fullPath);
 
             if (!ModuleFile) {
-                Logger.error('Module not found ' + fullPath);
+                Logger.error("Module not found " + fullPath);
                 process.exit(1);
             } else {
                 await ModuleFile.boot(Bootstrap);

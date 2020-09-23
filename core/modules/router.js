@@ -157,8 +157,6 @@ Router.routePath = function routePath(alias, params) {
         (groupName != null ? "/" : "") + ("" + groupName) + router.route.path;
     path = path.replace(/\/\//g, "/");
 
-    console.log(path);
-
     /* Replace params */
     if (null != params) {
         const pathParams = path.match(/(:\w+\??)/g) || [];
