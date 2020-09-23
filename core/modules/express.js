@@ -113,9 +113,15 @@ ExpressModule.addMiddleware = async function addMiddleware(app, expressConfig) {
     const csrf = CSURF({
         cookie: true,
     });
-    app.use(csrf);
     app.use((req, res, next) => {
-        res.locals.csrftoken = req.csrfToken();
+        if (global.useCSRF && global.useCSRF(req)) {
+            next();
+        } else {
+            csrf(req, res, next);
+        }
+    });
+    app.use((req, res, next) => {
+        res.locals.csrftoken = req.csrfToken ? req.csrfToken() : "";
         next();
     });
 
