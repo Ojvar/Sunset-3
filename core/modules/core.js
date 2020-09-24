@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
+const FS = require("fs");
 const Path = require("path");
 const DotEnv = require("dotenv");
 
@@ -13,18 +14,36 @@ module.exports = Core;
 /**
  * Boot function
  */
-Core.boot = function boot(Bootstrap) {
-    return new Promise((resolve, reject) => {
-        DotEnv.config();
+Core.boot = async function boot(Bootstrap) {
+    Core.configDotEnv();
 
-        global.isProductionMode = Core.isProductionMode;
-        global.rPath = Core.rPath;
-        global.use = Core.use;
-        global.config = Core.config;
-        global.mix = Core.mix;
+    global.isProductionMode = Core.isProductionMode;
+    global.rPath = Core.rPath;
+    global.use = Core.use;
+    global.config = Core.config;
+    global.mix = Core.mix;
+};
 
-        resolve();
-    });
+/**
+ * Config DotEnv
+ */
+Core.configDotEnv = function configDotEnv() {
+    let dotEnvFile;
+
+    if (process.env.ENV_FILE) {
+        dotEnvFile = process.env.ENV_FILE;
+    } else if (Core.isProductionMode()) {
+        dotEnvFile = ".env.prod";
+    } else {
+        dotEnvFile = ".env";
+    }
+
+    const confData = FS.readFileSync(dotEnvFile);
+    const envConfig = DotEnv.parse(confData);
+
+    for (const k in envConfig) {
+        process.env[k] = envConfig[k];
+    }
 };
 
 /**
