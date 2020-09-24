@@ -37,7 +37,18 @@ Server.listen = function listen(Config) {
             Config.host +
             (Config.port != deafultPort ? `:${Config.port}` : "");
         server.listen(Config.port, Config.host, () => {
-            Logger.info(`Server started at ${serverUrl}`);
+            /* Start listening */
+            console.info(
+                `
+Server started at
+https://${Config.host}:${Config.port}
+    {
+        Host: ${Config.host}
+        Port: ${Config.port}
+        Url: ${Config.serverUrl}
+    }
+`
+            );
         });
 
         global.serverUrl = Config.serverUrl;
