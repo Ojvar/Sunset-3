@@ -13,6 +13,6 @@ module.exports = {
         150: "router",
         200: "database",
         300: "services",
-        90: "server",
+        900: "server",
     },
 };
