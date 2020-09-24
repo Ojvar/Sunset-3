@@ -1,7 +1,6 @@
 "use strict";
 
-const FS = require("fs");
-const Path = require("path");
+const Glob = require("glob");
 
 /**
  * Services module
@@ -14,35 +13,25 @@ module.exports = Services;
  * @param {Object} Bootstrap Bootstrap instance
  */
 Services.boot = function boot(Bootstrap) {
-    return new Promise((resolve, reject) => {
-        Promise.all([
-            this.loadServices("core/services"),
-            this.loadServices("back-end/services"),
-        ])
-            .then((res) => resolve())
-            .catch((err) => reject(err));
-    });
+    return Promise.all([
+        Services.loadServices("core/services"),
+        Services.loadServices("back-end/services"),
+    ]);
 };
 
 /**
  * Load core services
  */
-Services.loadServices = function loadServices(servicesPath) {
-    return new Promise(async (resolve, reject) => {
-        const basePath = rPath(servicesPath);
-        const files = FS.readdirSync(basePath).filter(
-            (file) => Path.extname(file).toLowerCase() == ".js"
-        );
+Services.loadServices = async function loadServices(servicesPath) {
+    const basePath = rPath(servicesPath, "**/*.js");
+    const files = Glob.sync(basePath);
 
-        for (let fileIndex in files) {
-            let file = files[fileIndex];
+    for (let fileIndex in files) {
+        let file = files[fileIndex];
 
-            if (file.toLowerCase().endsWith("js")) {
-                const Service = use(basePath, file);
-                await Service.boot();
-            }
-        }
+        const Service = use(file);
+        await Service.boot();
 
-        resolve();
-    });
+        console.log(`>>\tService loaded : ${file}`);
+    }
 };

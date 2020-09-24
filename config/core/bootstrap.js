@@ -6,12 +6,13 @@
 module.exports = {
     modules: {
         100: "core",
-        101: "logger",
-        102: "express",
-        103: "session",
-        104: "router",
-        105: "database",
-        110: "services",
-        199: "server",
+        101: "events",
+        110: "logger",
+        120: "express",
+        140: "session",
+        150: "router",
+        200: "database",
+        300: "services",
+        90: "server",
     },
 };

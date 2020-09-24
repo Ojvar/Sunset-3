@@ -45,10 +45,17 @@ https://${Config.host}:${Config.port}
     {
         Host: ${Config.host}
         Port: ${Config.port}
-        Url: ${Config.serverUrl}
+        Url(SERVER-SIDE): ${Config.serverUrl}
+        Url(CLIENT-SIDE): ${serverUrl}
     }
 `
             );
+
+            /* Raise server-boot event */
+            global.raiseEvent("ServerBoot", {
+                date: new Date(),
+                message: "FROM Ojvar",
+            });
         });
 
         global.serverUrl = Config.serverUrl;

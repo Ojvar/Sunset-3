@@ -1,48 +1,52 @@
 "use strict";
 
-const FS = require("fs");
-const Path = require("path");
+const Glob = require("glob");
 
 /**
- * Services module
+ * Events module
  */
-function Services() {}
-module.exports = Services;
+function Events() {}
+module.exports = Events;
 
 /**
  * Boot function
  * @param {Object} Bootstrap Bootstrap instance
  */
-Services.boot = function boot(Bootstrap) {
-    return new Promise((resolve, reject) => {
-        Promise.all([
-            this.loadServices("core/services"),
-            this.loadServices("back-end/services"),
-        ])
-            .then((res) => resolve())
-            .catch((err) => reject(err));
-    });
+Events.boot = function boot(Bootstrap) {
+    Events.handlers = {};
+    global.raiseEvent = Events.raiseEvent;
+
+    return Promise.all([
+        Events.loadHandlers("core/handlers"),
+        Events.loadHandlers("back-end/handlers"),
+    ]);
 };
 
 /**
- * Load core services
+ * Raise an event
+ * @param {String} eventName Event name
+ * @param {Object} payload Payload object
  */
-Services.loadServices = function loadServices(servicesPath) {
-    return new Promise(async (resolve, reject) => {
-        const basePath = rPath(servicesPath);
-        const files = FS.readdirSync(basePath).filter(
-            (file) => Path.extname(file).toLowerCase() == ".js"
-        );
+Events.raiseEvent = async function raiseEvent(eventName, payload) {
+    const event = Events.handlers[eventName];
 
-        for (let fileIndex in files) {
-            let file = files[fileIndex];
+    if (event) {
+        event.handle(payload);
+    }
+};
 
-            if (file.toLowerCase().endsWith("js")) {
-                const Service = use(basePath, file);
-                await Service.boot();
-            }
-        }
+/**
+ * Load event-handlers
+ */
+Events.loadHandlers = async function loadHandlers(eventsPath) {
+    const basePath = rPath(eventsPath, "**/*.js");
+    const files = Glob.sync(basePath);
 
-        resolve();
-    });
+    for (let fileIndex in files) {
+        let file = files[fileIndex];
+
+        const Handler = use(file);
+        Events.handlers[Handler.name] = Handler.handler;
+        console.log(`>>\tHandler loaded : ${Handler.name}`);
+    }
 };
