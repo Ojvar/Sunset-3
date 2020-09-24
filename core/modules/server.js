@@ -54,7 +54,6 @@ https://${Config.host}:${Config.port}
             /* Raise server-boot event */
             global.raiseEvent("ServerBoot", {
                 date: new Date(),
-                message: "FROM Ojvar",
             });
         });
 
