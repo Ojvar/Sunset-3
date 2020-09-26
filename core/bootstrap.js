@@ -22,32 +22,28 @@ Bootstrap.boot = function boot() {
  * Load modules
  * @param {Object} config Config data
  */
-Bootstrap.loadModules = function loadModules(config) {
-    return new Promise(async (resolve, reject) => {
-        const path = Path.resolve(__dirname, "modules");
-        const modules = Object.keys(config.modules)
-            .sort()
-            .map((x) => config.modules[x]);
+Bootstrap.loadModules = async function loadModules(config) {
+    const path = Path.resolve(__dirname, "modules");
+    const modules = Object.keys(config.modules)
+        .sort()
+        .map((x) => config.modules[x]);
 
-        for (let moduleIndex in modules) {
-            const module = modules[moduleIndex];
-            const fullPath = Path.resolve(path, module);
+    for (let moduleIndex in modules) {
+        const module = modules[moduleIndex];
+        const fullPath = Path.resolve(path, module);
 
-            /* Check module exists */
-            const ModuleFile = require(fullPath);
+        /* Check module exists */
+        const ModuleFile = require(fullPath);
 
-            if (!ModuleFile) {
-                Logger.error("Module not found " + fullPath);
-                process.exit(1);
-            } else {
-                await ModuleFile.boot(Bootstrap);
-                Logger.info(`Module ${module} loaded successfully`);
-            }
+        if (!ModuleFile) {
+            Logger.error("Module not found " + fullPath);
+            process.exit(1);
+        } else {
+            await ModuleFile.boot(Bootstrap);
+            Logger.info(`Module ${module} loaded successfully`);
         }
+    }
 
-        /* Make route-manifest file */
-        Router.makeManifest();
-
-        resolve();
-    });
+    /* Make route-manifest file */
+    Router.makeManifest();
 };
