@@ -1,7 +1,7 @@
 "use strict";
 
 const Crypto = require("crypto");
-const CryptoConfig = config("back-end/crypto-helper");
+const CryptoConfig = config("back-end/crypto");
 
 /**
  * Crypto Helper function
@@ -15,8 +15,8 @@ module.exports = CryptoHelper;
  */
 CryptoHelper.encrypt = function encrypt(cleanText) {
     let mykey = Crypto.createCipher(
-        CryptoConfig.crypto_algorithm,
-        CryptoConfig.crypto_key
+        CryptoConfig.cryptoAlgorithm,
+        CryptoConfig.cryptoKey
     );
     let mystr = mykey.update(cleanText, "utf8", "hex");
     mystr += mykey.final("hex");
@@ -30,8 +30,8 @@ CryptoHelper.encrypt = function encrypt(cleanText) {
  */
 CryptoHelper.decrypt = function decrypt(cypherText) {
     let mykey = Crypto.createCipher(
-        CryptoConfig.crypto_algorithm,
-        CryptoConfig.crypto_key
+        CryptoConfig.cryptoAlgorithm,
+        CryptoConfig.cryptoKey
     );
     let mystr = mykey.update(cypherText, "hex", "utf8");
     mystr += mykey.final("utf-8");
