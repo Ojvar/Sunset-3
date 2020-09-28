@@ -24,22 +24,20 @@ Server.boot = function boot(Bootstrap) {
  * Listen
  * @param {Object} Config Config object
  */
-Server.listen = function listen(Config) {
-    return new Promise((resolve, reject) => {
-        let server =
-            Config.https === true
-                ? Server.startHttps(Config)
-                : Server.startHttp(Config);
+Server.listen = async function listen(Config) {
+    let server =
+        Config.https === true
+            ? Server.startHttps(Config)
+            : Server.startHttp(Config);
 
-        const deafultPort = Config.https ? 443 : 80;
-        const serverUrl =
-            (Config.https ? "https://" : "http://") +
-            Config.host +
-            (Config.port != deafultPort ? `:${Config.port}` : "");
-        server.listen(Config.port, Config.host, () => {
-            /* Start listening */
-            console.info(
-                `
+    const deafultPort = Config.https ? 443 : 80;
+    const serverUrl =
+        (Config.https ? "https://" : "http://") +
+        Config.host +
+        (Config.port != deafultPort ? `:${Config.port}` : "");
+    server.listen(Config.port, Config.host, () => {
+        /* Start listening */
+        const msg = `
 Server started at
 https://${Config.host}:${Config.port}
     {
@@ -48,20 +46,17 @@ https://${Config.host}:${Config.port}
         Url(SERVER-SIDE): ${Config.serverUrl}
         Url(CLIENT-SIDE): ${serverUrl}
     }
-`
-            );
+`;
+        Logger.info(msg);
 
-            /* Raise server-boot event */
-            global.raiseEvent("ServerBoot", {
-                date: new Date(),
-            });
+        /* Raise server-boot event */
+        global.raiseEvent("ServerBoot", {
+            date: new Date(),
         });
-
-        global.serverUrl = Config.serverUrl;
-        global.Server = server;
-
-        resolve();
     });
+
+    global.serverUrl = Config.serverUrl;
+    global.Server = server;
 };
 
 /**

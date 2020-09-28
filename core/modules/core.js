@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
+const Colors = require("colors");
 const FS = require("fs");
 const Path = require("path");
 const DotEnv = require("dotenv");
@@ -17,6 +18,7 @@ module.exports = Core;
 Core.boot = async function boot(Bootstrap) {
     Core.configDotEnv();
 
+    global.Colors = Colors;
     global.isProductionMode = Core.isProductionMode;
     global.rPath = Core.rPath;
     global.use = Core.use;
@@ -94,8 +96,8 @@ Core.mix = function mix(file) {
         try {
             Core.mixManifest = Core.use("public/mix-manifest.json");
         } catch (err) {
-            console.error(err);
-            return "";
+            Logger.error(err);
+            return err;
         }
     }
 

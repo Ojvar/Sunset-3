@@ -34,7 +34,7 @@ RedisHelper.prototype.init = function init(options) {
         this.client = Redis.createClient(options);
 
         this.client.on("error", function(error) {
-            console.error(error);
+            Logger.error(error);
         });
 
         if (options.password) {

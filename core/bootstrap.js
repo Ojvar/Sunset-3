@@ -12,9 +12,11 @@ module.exports = Bootstrap;
  * Boot function
  */
 Bootstrap.boot = function boot() {
+    global.Logger = console;
+
+    /* Require Logger */
     const config = require(Path.resolve("config/core/bootstrap"));
 
-    global.Logger = console;
     return Bootstrap.loadModules(config);
 };
 
@@ -28,19 +30,19 @@ Bootstrap.loadModules = async function loadModules(config) {
         .sort()
         .map((x) => config.modules[x]);
 
-    for (let moduleIndex in modules) {
-        const module = modules[moduleIndex];
+    for (let i = 0; i < modules.length; ++i) {
+        const module = modules[i];
         const fullPath = Path.resolve(path, module);
 
         /* Check module exists */
         const ModuleFile = require(fullPath);
 
         if (!ModuleFile) {
-            Logger.error("Module not found " + fullPath);
+            Logger.error(`Module not found ${fullPath}`);
             process.exit(1);
         } else {
             await ModuleFile.boot(Bootstrap);
-            Logger.info(`Module ${module} loaded successfully`);
+            Logger.info(`Module "${module.toString().yellow}" loaded successfully`);
         }
     }
 

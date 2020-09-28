@@ -7,20 +7,19 @@ const Path = require("path");
 /**
  * Driver module
  */
-function Driver() {
+function Driver(config) {
     this.engine = null;
+    this.config = config || {};
 }
 module.exports = Driver;
 
 /**
  * Initialize driver
  */
-Driver.init = function init() {
-    return new Promise((resolve, reject) => {
-        let driver = new Driver();
+Driver.init = function init(config) {
+    let driver = new Driver(config);
 
-        resolve(driver);
-    });
+    return driver;
 };
 
 /**
@@ -40,41 +39,40 @@ Driver.getConnectionString = function getConnectionString(config) {
 Driver.prototype.connect = function connect() {
     return new Promise((resolve, reject) => {
         const databaseConfig = config("core/db", "mongodb");
+        const connString = Driver.getConnectionString(databaseConfig);
 
-        try {
-            const connString = Driver.getConnectionString(databaseConfig);
-            this.engine = Mongoose.connect(connString, databaseConfig.options);
-
-            /* Try to init models */
-            this.initModels(this.engine)
-                .then((res) => resolve(this))
-                .catch((err) => reject(err));
-        } catch (err) {
-            reject(err);
-        }
+        this.engine = Mongoose.connect(
+            connString,
+            databaseConfig.options,
+            (err, res) => {
+                if (err) {
+                    Logger.error(err);
+                    reject(err);
+                } else {
+                    /* Try to init models */
+                    this.initModels(this.engine)
+                        .then((res) => resolve(this))
+                        .catch((err) => reject(err));
+                }
+            }
+        );
     });
 };
 
 /**
  * Init models
  */
-Driver.prototype.initModels = function initModels(engine) {
-    return new Promise((resolve, reject) => {
-        const basePath = rPath("back-end/models");
-        const models = FS.readdirSync(basePath).filter(
-            (file) => Path.extname(file).toLowerCase() == ".js"
-        );
+Driver.prototype.initModels = async function initModels(engine) {
+    const basePath = rPath("back-end/models");
+    const models = FS.readdirSync(basePath).filter(
+        (file) => Path.extname(file).toLowerCase() == ".js"
+    );
 
-        models.forEach((file) => {
-            const Model = use(basePath, file);
-            Model.init().then((model) => {
-                Logger.info(
-                    `> DB-Model ${model.name} initialized successfully`
-                );
-            });
-        });
+    await models.forEach(async (file) => {
+        const Model = use(basePath, file);
 
-        resolve();
+        let model = await Model.init();
+        Logger.info(`DB-Model ${model.name} initialized successfully`);
     });
 };
 

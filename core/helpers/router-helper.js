@@ -64,7 +64,7 @@ RouterHelper.prototype.addRoute = function addRoute(
  */
 RouterHelper.redirect = function redirect(Router) {
     return (to) => {
-        console.log("Redirct", to);
+        Logger.log("Redirct", to);
     };
 };
 

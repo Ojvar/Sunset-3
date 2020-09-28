@@ -65,7 +65,8 @@ Router.loadRoutes = function loadRoutes() {
 Router.addEventHandler = function addEventHandler() {
     /* Add Error handler */
     global.App.use((err, req, res, next) => {
-        console.error(err);
+        Logger.error(err);
+
         let message = "Internal server error";
 
         if ("development" === process.env.NODE_ENV) {

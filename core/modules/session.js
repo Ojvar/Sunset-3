@@ -46,7 +46,7 @@ SessionModule.initSession = function initSession(config) {
             const session = Session(options);
 
             App.use(session);
-            console.log("> Session initialized successfully");
+            Logger.info("Session initialized successfully");
 
             resolve(session);
         });

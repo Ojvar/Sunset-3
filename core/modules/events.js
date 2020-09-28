@@ -47,6 +47,6 @@ Events.loadHandlers = async function loadHandlers(eventsPath) {
 
         const Handler = use(file);
         Events.handlers[Handler.name] = Handler.handler;
-        console.log(`>>\tHandler loaded : ${Handler.name}`);
+        Logger.info(`Handler loaded : ${Handler.name}`);
     }
 };

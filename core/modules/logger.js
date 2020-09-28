@@ -14,15 +14,11 @@ Logger.Logger = console;
 /**
  * Boot function
  */
-Logger.boot = function boot(Bootstrap) {
-    return new Promise((resolve, reject) => {
-        const Config = config("core/server", "logger");
+Logger.boot = async function boot(Bootstrap) {
+    const Config = config("core/server", "logger");
 
-        Logger.Logger = Logger.setupWinston(Config);
-        global.Logger = Logger.Logger;
-
-        resolve();
-    });
+    Logger.Logger = Logger.setupWinston(Config);
+    global.Logger = Logger.Logger;
 };
 
 /**
@@ -37,7 +33,10 @@ Logger.setupWinston = function setupWinston(Config) {
     if (process.env.NODE_ENV !== "production") {
         logger.add(
             new Winston.transports.Console({
-                format: Winston.format.simple(),
+                format: Winston.format.combine(
+                    Winston.format.colorize(),
+                    Winston.format.simple()
+                ),
             })
         );
     } else {
@@ -47,13 +46,13 @@ Logger.setupWinston = function setupWinston(Config) {
                 level: "error",
             })
         );
-
-        logger.add(
-            new Winston.transports.File({
-                filename: rPath(Config.path, "combined.log"),
-            })
-        );
     }
+
+    logger.add(
+        new Winston.transports.File({
+            filename: rPath(Config.path, "all.log"),
+        })
+    );
 
     return logger;
 };

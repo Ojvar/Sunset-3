@@ -13,5 +13,5 @@ module.exports = {
  * Handle function
  */
 Handler.handle = async function handle(payload) {
-    console.log("Server-Boot event raisd", payload);
+    Logger.info("Server-Boot event raisd", payload);
 };

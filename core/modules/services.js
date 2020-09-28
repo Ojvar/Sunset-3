@@ -32,6 +32,6 @@ Services.loadServices = async function loadServices(servicesPath) {
         const Service = use(file);
         await Service.boot();
 
-        console.log(`>>\tService loaded : ${file}`);
+        Logger.info(`>>\tService loaded : ${file}`);
     }
 };
