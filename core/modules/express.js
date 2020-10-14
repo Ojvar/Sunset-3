@@ -5,6 +5,7 @@ const Path = require("path");
 const Express = require("express");
 const bodyParser = require("body-parser");
 const CookieParser = require("cookie-parser");
+const Crypto = require("crypto");
 const CSURF = require("csurf");
 const CORS = require("cors");
 const Helmet = require("helmet");
@@ -107,7 +108,27 @@ ExpressModule.addMiddleware = async function addMiddleware(app, expressConfig) {
     app.use(bodyParser.json());
 
     /* Helmet */
-    app.use(Helmet());
+    const HelmetConfig = config("core/helmet");
+
+    app.use((req, res, next) => {
+        res.locals.cspNonce = Crypto.randomBytes(16).toString("hex");
+        next();
+    });
+    app.use(Helmet.contentSecurityPolicy(HelmetConfig.contentSecurityPolicy));
+    app.use(Helmet.dnsPrefetchControl(HelmetConfig.dnsPrefetchControl));
+    app.use(Helmet.expectCt(HelmetConfig.expectCt));
+    app.use(Helmet.frameguard(HelmetConfig.frameguard));
+    app.use(Helmet.hidePoweredBy());
+    app.use(Helmet.hsts(HelmetConfig.hsts));
+    app.use(Helmet.ieNoOpen());
+    app.use(Helmet.noSniff());
+    app.use(
+        Helmet.permittedCrossDomainPolicies(
+            HelmetConfig.permittedCrossDomainPolicies
+        )
+    );
+    app.use(Helmet.referrerPolicy(HelmetConfig.referrerPolicy));
+    app.use(Helmet.xssFilter());
 
     /* CSRF */
     const csrf = CSURF({

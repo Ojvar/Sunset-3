@@ -17,3 +17,5 @@ block styles
 
 block scripts
     script(defer src=mix("/js/pages/home/index.js"))
+    script(nonce=cspNonce).
+        console.log("Test Inline-scripts, In order of testing helmet csp module")
